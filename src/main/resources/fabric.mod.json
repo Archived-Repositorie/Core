@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "ivycore",
   "version": "${version}",
 
-  "name": "Example Server Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "IvyCore",
+  "description": "A Core for all projects",
   "authors": [
-    "Me!"
+    "JustFoxx"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/IvyMC-Project/Core",
+    "sources": "https://github.com/IvyMC-Project/Core"
   },
 
   "license": "LGPL-3.0",
   "environment": "*",
   "entrypoints": {
-    "server": [
-      "io.github.ivymc.example.Main"
+    "preLaunch": [
+      "io.github.ivymc.ivycore.Main"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "ivycore.mixins.json"
   ],
 
   "depends": {
