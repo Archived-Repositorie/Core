@@ -1,6 +1,8 @@
 package io.github.ivymc.ivycore;
 
+import io.github.ivymc.ivycore.registry.RegistryBuilder;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import net.minecraft.util.Identifier;
 
 public class Main implements PreLaunchEntrypoint {
     private static final Global g = new Global("ivycore");
