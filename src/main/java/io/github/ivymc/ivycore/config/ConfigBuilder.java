@@ -13,46 +13,20 @@ import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ConfigBuilder <T extends ConfigData> {
-    private final Path path;
-    private final Class<T> clazz;
-    private T data;
-    private JsonObject object;
+public class ConfigBuilder {
+    private final Path configPath;
 
 
-    public final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public ConfigBuilder(Path path, Class<T> clazz) {
-        this.path = path;
-        this.clazz = clazz;
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public ConfigBuilder(Path configPath) {
+        this.configPath = FabricLoader.getInstance().getConfigDir().resolve(configPath);
     }
-    private final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("totconfig");
-    public void writeConfig() throws Exception {
+    public void loadConfig() throws Exception {
         if(Files.notExists(configPath)) {
             Files.createDirectories(configPath);
         }
-        var config = clazz.getConstructor().newInstance();
-        Files.writeString(configPath.resolve(path), GSON.toJson(config));
-        object = jsonReader(configPath.resolve(path).toFile());
-        data = config;
-        data.onRead(object);
     }
-
-    public static JsonObject jsonReader(File file) throws FileNotFoundException {
-        JsonReader reader = new JsonReader(new FileReader(file));
-        return JsonParser.parseReader(reader).getAsJsonObject();
-    }
-
-    public void readConfig() throws Exception {
-        object = jsonReader(configPath.resolve(path).toFile());
-        data = GSON.fromJson(Files.readString(configPath.resolve(path)), clazz);
-        data.onRead(object);
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public JsonObject getObject() {
-        return object;
+    public <T extends ConfigData> ConfigKey createConfigKey(Path path, Class<T> clazz) {
+        return new ConfigKey<>(clazz, this.configPath.resolve(path), GSON);
     }
 }
