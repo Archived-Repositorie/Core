@@ -14,18 +14,18 @@ import java.nio.file.Path;
 public class ConfigKey <T extends ConfigData> {
     private final Gson GSON;
     public JsonObject object;
-    public final Class<T> clazz;
+    public final Class<? super T> clazz;
     public T data;
     public final Path path;
 
-    public ConfigKey(Class<T> clazz, Path path, Gson gson) {
+    public ConfigKey(Class<? super T> clazz, Path path, Gson gson) {
         this.clazz = clazz;
         this.path = path;
         this.GSON = gson;
     }
 
     public void writeConfig() throws Exception {
-        var config = clazz.getConstructor().newInstance();
+        var config = (T) clazz.getConstructor().newInstance();
         Files.writeString(path, GSON.toJson(config));
         object = jsonReader(path.toFile());
         data = config;
@@ -39,7 +39,7 @@ public class ConfigKey <T extends ConfigData> {
 
     public void readConfig() throws Exception {
         object = jsonReader(path.toFile());
-        data = GSON.fromJson(Files.readString(path), clazz);
+        data = (T)GSON.fromJson(Files.readString(path), clazz);
         data.onRead(object);
     }
 }
